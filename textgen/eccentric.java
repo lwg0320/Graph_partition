@@ -7,15 +7,16 @@ import java.text.DecimalFormat;
 public class eccentric {
     public static void main(String[] args) {
         Random rand = new Random();
-        make();
+        String name = "test50.txt";
+        make(name);
         String[] lines = new String[1227];
-        lines[0] = "50";
+        int num = 50;
+        lines[0] = String.valueOf(num);
         lines[1] = "1000";
-        
         int offset = 2;
         int count = 0;
-        for (int i = 0; i < 49; i += 1) {
-            for (int j = i + 1; j < 50; j += 1) {
+        for (int i = 0; i < num - 1; i += 1) {
+            for (int j = i + 1; j < num; j += 1) {
                 double randomHappy = rand.nextDouble() * 100;
                 double randomStress = rand.nextDouble() * 100;
                 DecimalFormat df = new DecimalFormat("##.###");
@@ -26,14 +27,59 @@ public class eccentric {
                 offset += 1;
             }
         }
-        write(lines);
+        write(lines, name);
+
+
+        name = "test20.txt";
+        make(name);
+        String[] lines2 = new String[192];
+        num = 20;
+        lines[0] = String.valueOf(num);
+        lines[1] = "250";
+        offset = 2;
+        for (int i = 0; i < num - 1; i += 1) {
+            for (int j = i + 1; j < num; j += 1) {
+                double randomHappy = rand.nextDouble() * 100;
+                double randomStress = rand.nextDouble() * 100;
+                DecimalFormat df = new DecimalFormat("##.###");
+                String temp = "" + i + " " + j + " " +
+                    "" + df.format(randomHappy) + " " +
+                    df.format(randomStress);
+                lines2[offset] = temp;
+                offset += 1;
+            }
+        }
+        write(lines2, name);
+
+
+
+        name = "test10.txt";
+        make(name);
+        String[] lines3 = new String[47];
+        num = 10;
+        lines[0] = String.valueOf(num);
+        lines[1] = "80";
+        offset = 2;
+        for (int i = 0; i < num - 1; i += 1) {
+            for (int j = i + 1; j < num; j += 1) {
+                double randomHappy = rand.nextDouble() * 100;
+                double randomStress = rand.nextDouble() * 100;
+                DecimalFormat df = new DecimalFormat("##.###");
+                String temp = "" + i + " " + j + " " +
+                    "" + df.format(randomHappy) + " " +
+                    df.format(randomStress);
+                lines3[offset] = temp;
+                offset += 1;
+            }
+        }
+        write(lines3, name);
     }
 
     //creates test.txt if it doesn't exist.
-    public static void make() {
+    public static void make(String name) {
         try
             {
-            File myFile = new File("test50.txt");
+            File myFile = new File(name);
             if (myFile.createNewFile()) {
                 System.out.println("File created: " + myFile.getName());
             } else {
@@ -47,9 +93,9 @@ public class eccentric {
     }
 
     //writes to test.txt for all in the string array.
-    public static void write(String[] lines) {
+    public static void write(String[] lines, String name) {
         try {
-            FileWriter myWriter = new FileWriter("test50.txt");
+            FileWriter myWriter = new FileWriter(name);
             for (int i = 0; i < lines.length; i += 1) {
                 myWriter.write(lines[i] + "\n");
             }
@@ -62,5 +108,3 @@ public class eccentric {
         }
     }
 }
-
-//java eccentric.java
