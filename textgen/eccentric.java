@@ -19,7 +19,7 @@ public class eccentric {
             for (int j = i + 1; j < num; j += 1) {
                 double randomHappy = rand.nextDouble() * 100;
                 double randomStress = rand.nextDouble() * 100;
-                DecimalFormat df = new DecimalFormat("##.###");
+                DecimalFormat df = new DecimalFormat("#.###");
                 String temp = "" + i + " " + j + " " +
                     "" + df.format(randomHappy) + " " +
                     df.format(randomStress);
@@ -41,7 +41,7 @@ public class eccentric {
             for (int j = i + 1; j < num; j += 1) {
                 double randomHappy = rand.nextDouble() * 100;
                 double randomStress = rand.nextDouble() * 100;
-                DecimalFormat df = new DecimalFormat("##.###");
+                DecimalFormat df = new DecimalFormat("#.###");
                 String temp = "" + i + " " + j + " " +
                     "" + df.format(randomHappy) + " " +
                     df.format(randomStress);
@@ -64,7 +64,7 @@ public class eccentric {
             for (int j = i + 1; j < num; j += 1) {
                 double randomHappy = rand.nextDouble() * 100;
                 double randomStress = rand.nextDouble() * 100;
-                DecimalFormat df = new DecimalFormat("##.###");
+                DecimalFormat df = new DecimalFormat("#.###");
                 String temp = "" + i + " " + j + " " +
                     "" + df.format(randomHappy) + " " +
                     df.format(randomStress);
