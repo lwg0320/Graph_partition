@@ -1,6 +1,6 @@
 import numpy as np 
 import pandas as pd
-from math import comb
+from math import *
 import gurobipy as gp
 from gurobipy import GRB
 
@@ -155,7 +155,7 @@ def gurobi_solver(path, rooms, time_limit):
     # Outputs 
         total_happiness = np.sum(np.multiply(pair_values, happiness))
         print("Total Happiness =", total_happiness)
-        return output_dict
+        print(output_dict)
     except:
         print("No/Infeasible Solution with {0} rooms".format(rooms))
 
@@ -164,4 +164,4 @@ def gurobi_solver(path, rooms, time_limit):
 
 # SOLVE 
 # (Path, Rooms, Time Limit)
-gurobi_solver("textgen/test50.txt", 10, 100)
+gurobi_solver("phase1/20.in", 5, 30)
