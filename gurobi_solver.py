@@ -43,7 +43,7 @@ def create_variables(N, K, dict_e, dict_v):
     vertices_1 = list(dict_v.values())
 
     # Create another edge array with different sort
-    vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys(), key=lambda x: x[2])]
+    vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys())]
     
     # Quadratic variables 1 
     v_list = np.array(np.array_split(vertices_1, K)).tolist()
@@ -163,4 +163,5 @@ def gurobi_solver(path, rooms, time_limit):
 
 
 # SOLVE 
+# (Path, Rooms, Time Limit)
 gurobi_solver("textgen/test50.txt", 10, 100)
