@@ -8,13 +8,15 @@ import pandas as pd
 # import networkx as nx
 from parse import *
 from utils  import *
-from math import *
+# from math import *
 import gurobipy as gp
 from gurobipy import GRB
 
 
 # ## Solver
 
+def comb(n,k):
+    return int(factorial(n)/(factorial(k)*factorial(n - k)))
 
 def parse_inputs(inputs, K):
     df = inputs
@@ -205,5 +207,5 @@ def write_files(capacity):
 # for room in range(1,9):
 #     gurobi_solver("phase2/inputs/small/small-242.in", room, 60*10)
 
-
+print(comb(50,2))
 
