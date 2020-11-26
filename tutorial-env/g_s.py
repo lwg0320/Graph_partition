@@ -1,9 +1,19 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# # Modular Gurobi Solver 
+
 import numpy as np 
 import pandas as pd
+# import networkx as nx
+from parse import *
+from utils  import *
 from math import *
 import gurobipy as gp
 from gurobipy import GRB
 
+
+# ## Solver
 
 
 def parse_inputs(inputs, K):
@@ -27,6 +37,8 @@ def parse_inputs(inputs, K):
     return i_id, j_id, sadness, happiness, sadness_1, happiness_1 
 
 
+# In[3]:
+
 
 def create_variables(N, K, dict_e, dict_v):
     # edges 
@@ -43,6 +55,7 @@ def create_variables(N, K, dict_e, dict_v):
     vertices_1 = list(dict_v.values())
 
     # Create another edge array with different sort
+#     vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys(), key=lambda x: x[2])]
     vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys())]
     
     # Quadratic variables 1 
@@ -69,6 +82,7 @@ def create_variables(N, K, dict_e, dict_v):
     return edges_1, edges_2, edges_3, vertices_1, vertices_2, v_big, v_big_2
 
 
+# In[4]:
 
 
 def constraint_helper(edges_1, sadness_1, vertices_2, N, K):
@@ -82,6 +96,8 @@ def constraint_helper(edges_1, sadness_1, vertices_2, N, K):
     constraint_2 = [sum(vertices_2[i:i + K]) for i in range(0, len(vertices_2), K)]
     return constraint_1, constraint_2
 
+
+# In[43]:
 
 
 def gurobi_solver(path, rooms, time_limit):
@@ -98,46 +114,47 @@ def gurobi_solver(path, rooms, time_limit):
     s_max = float(list(inputs[0])[1])
     K = rooms
     i_id, j_id, sadness, happiness, sadness_1, happiness_1 = parse_inputs(inputs, K)
-    
-    # Initialize model 
+
+    # Initialize model
     m = gp.Model("proj")
     m.setParam('OutputFlag', 0)
-    
+    m.setParam("TuneOutput", 0)
+
     # Create arrays to help with methods 
     dict_e = {}
     for k in range(K):
         for i in range(comb(N, 2)):
             dict_e["e_{0}_{1}_{2}".format(i_id[i],j_id[i],k)] = m.addVar(name= "e_{0}_{1}_{2}".format(i_id[i],j_id[i],k), vtype = GRB.BINARY)
-    
+
     dict_v = {}
     for j in range(K):
         for i in range(N):
             dict_v["v_{0}_{1}".format(i,j)] = m.addVar(name = "v_{0}_{1}".format(i,j),  vtype = GRB.BINARY)
-    
-    
+
+
     edges_1, edges_2, edges_3, vertices_1, vertices_2, v_big, v_big_2 = create_variables(N, K, dict_e, dict_v)
-    
+
     # Set Object function 
     m.setObjective(sum(edges_1[i] * happiness[i] for i in range(len(happiness))), GRB.MAXIMIZE)
-    
+
     # Helper method to create constraints 
     constraint_1, constraint_2 = constraint_helper(edges_1, sadness_1, vertices_2, N, K)
-    
+
     # Add constraints 
     # Constraint 1 
     for i in range(len(constraint_1)):
-        m.addConstr(constraint_1[i] <=  s_max / K)
+        m.addConstr(constraint_1[i] <=  s_max / K) # Changes from float division 
     # Constraint 3
     for i in range(len(constraint_2)):
         m.addConstr(constraint_2[i] == 1)
     # Constraint 3 
     for i in range(len(edges_1)):
         m.addConstr(edges_1[i] == v_big[i] * v_big_2[i])
-     
+
     # Optimize model 
     m.setParam('TimeLimit', time_limit)
     m.optimize()
-    
+
     # Get outputs 
     pairs = m.getVars()[0 : len(m.getVars()) - N*K]
     people = m.getVars()[len(m.getVars()) - N*K : len(m.getVars())]
@@ -152,16 +169,41 @@ def gurobi_solver(path, rooms, time_limit):
                 if people_values[k][i] == 1: 
                     arr += [i]
                     output_dict[k] = arr
+                            
     # Outputs 
         total_happiness = np.sum(np.multiply(pair_values, happiness))
-        print("Total Happiness =", total_happiness)
-        print(output_dict)
+        total_sadness = np.sum(np.multiply(pair_values, sadness))
+        # print("Total Sadness =", total_sadness)
+        # print("Total Happiness =", total_happiness)
+        # print(output_dict)
+        return total_happiness, output_dict
     except:
-        print("No/Infeasible Solution with {0} rooms".format(rooms))
+        # print("No/Infeasible Solution with {0} rooms".format(rooms))
+        return 0, {}
 
 
 
+def optimal_solver(K_1, K_2, path, time_limit):
+    max_total_happiness = 0
+    output_dict = {}
+    for room in range(K_1, K_2):
+        happiness, D = gurobi_solver(path, room, time_limit)
+        if happiness > max_total_happiness:
+            max_total_happiness = happiness
+            output_dict = D
+    return output_dict
 
-# SOLVE 
-# (Path, Rooms, Time Limit)
-gurobi_solver("phase1/20.in", 5, 30)
+
+def write_files(capacity):
+    for i in range(1, capacity):
+        D = optimal_solver(1,19, "phase2/inputs/medium/medium-{0}.in".format(i), 60*5)
+        output_dict = convert_dictionary(D)
+        write_output_file(output_dict, "phase2/outputs/medium/medium-{0}.out".format(i))
+
+
+
+# for room in range(1,9):
+#     gurobi_solver("phase2/inputs/small/small-242.in", room, 60*10)
+
+
+

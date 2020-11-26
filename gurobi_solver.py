@@ -196,14 +196,14 @@ def optimal_solver(K_1, K_2, path, time_limit):
 
 def write_files(capacity):
     for i in range(1, capacity):
-        D = optimal_solver(1,10, "phase2/inputs/small/small-{0}.in".format(i), 30)
+        D = optimal_solver(1,19, "phase2/inputs/medium/medium-{0}.in".format(i), 60*5)
         output_dict = convert_dictionary(D)
-        write_output_file(output_dict, "phase2/outputs/small/small-{0}.out".format(i))
+        write_output_file(output_dict, "phase2/outputs/medium/medium-{0}.out".format(i))
 
 
 
-for room in range(1,9):
-    gurobi_solver("phase2/inputs/small/small-242.in", room, 60*20)
+# for room in range(1,9):
+#     gurobi_solver("phase2/inputs/small/small-242.in", room, 60*10)
 
 
 
