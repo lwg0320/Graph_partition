@@ -8,9 +8,9 @@ import pandas as pd
 # import networkx as nx
 from parse import *
 from utils  import *
-# from math import *
+from math import *
 import gurobipy as gp
-from gurobipy import GRB
+from gurobipy import GRB    
 
 
 # ## Solver
@@ -118,6 +118,8 @@ def gurobi_solver(path, rooms, time_limit):
     i_id, j_id, sadness, happiness, sadness_1, happiness_1 = parse_inputs(inputs, K)
 
     # Initialize model
+    env = Env(empty=True)
+    env.setParam("GRB_LICENSE_FILE", "~170proj")
     m = gp.Model("proj")
     m.setParam('OutputFlag', 0)
     m.setParam("TuneOutput", 0)
@@ -198,14 +200,10 @@ def optimal_solver(K_1, K_2, path, time_limit):
 
 def write_files(capacity):
     for i in range(1, capacity):
-        D = optimal_solver(1,19, "phase2/inputs/medium/medium-{0}.in".format(i), 60*5)
+        D = optimal_solver(1,19, "~170proj/phase2/inputs/medium/medium-{0}.in".format(i), 60*5)
         output_dict = convert_dictionary(D)
-        write_output_file(output_dict, "phase2/outputs/medium/medium-{0}.out".format(i))
+        write_output_file(output_dict, "~170proj/phase2/outputs/medium/medium-{0}.out".format(i))
 
 
 
-# for room in range(1,9):
-#     gurobi_solver("phase2/inputs/small/small-242.in", room, 60*10)
-
-print(comb(50,2))
 
