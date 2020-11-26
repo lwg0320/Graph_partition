@@ -118,7 +118,7 @@ def gurobi_solver(path, rooms, time_limit):
     i_id, j_id, sadness, happiness, sadness_1, happiness_1 = parse_inputs(inputs, K)
 
     # Initialize model
-    env = Env(empty=True)
+    env = gp.Env(empty=True)
     env.setParam("GRB_LICENSE_FILE", "~170proj")
     m = gp.Model("proj")
     m.setParam('OutputFlag', 0)
@@ -203,7 +203,6 @@ def write_files(capacity):
         D = optimal_solver(1,19, "~/170proj/phase2/inputs/medium/medium-{0}.in".format(i), 60*5)
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "~/170proj/phase2/outputs/medium/medium-{0}.out".format(i))
-
 
 
 
