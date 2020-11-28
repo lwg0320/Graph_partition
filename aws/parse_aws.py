@@ -1,9 +1,9 @@
 import re
 import os
 
-import networkx as nx
+# import networkx as nx
 
-import utils
+import utils_aws
 
 
 def validate_file(path):

@@ -1,4 +1,4 @@
-import networkx as nx
+# import networkx as nx
 
 def is_valid_solution(D, G, s, rooms):
     """
