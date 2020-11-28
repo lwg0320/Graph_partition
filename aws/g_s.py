@@ -1,22 +1,16 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Modular Gurobi Solver 
 
 import numpy as np 
 import pandas as pd
-# import networkx as nx
-from parse import *
-from utils  import *
+from parse_aws import *
+from utils_aws  import *
 from math import *
 import gurobipy as gp
-from gurobipy import GRB    
+from gurobipy import GRB
 
 
 # ## Solver
 
-def comb(n,k):
-    return int(factorial(n)/(factorial(k)*factorial(n - k)))
 
 def parse_inputs(inputs, K):
     df = inputs
@@ -118,7 +112,6 @@ def gurobi_solver(path, rooms, time_limit):
     i_id, j_id, sadness, happiness, sadness_1, happiness_1 = parse_inputs(inputs, K)
 
     # Initialize model
-    env = gp.Env(empty=True)
     m = gp.Model("proj")
     m.setParam('OutputFlag', 0)
     m.setParam("TuneOutput", 0)
@@ -176,12 +169,9 @@ def gurobi_solver(path, rooms, time_limit):
     # Outputs 
         total_happiness = np.sum(np.multiply(pair_values, happiness))
         total_sadness = np.sum(np.multiply(pair_values, sadness))
-        # print("Total Sadness =", total_sadness)
-        # print("Total Happiness =", total_happiness)
-        # print(output_dict)
-        return total_happiness, output_dict
+
+        return total_happiness, output_dict 
     except:
-        # print("No/Infeasible Solution with {0} rooms".format(rooms))
         return 0, {}
 
 
@@ -197,11 +187,10 @@ def optimal_solver(K_1, K_2, path, time_limit):
     return output_dict
 
 
-def write_files(capacity):
-    for i in range(1, capacity):
-        D = optimal_solver(1,19, "~/170proj/phase2/inputs/medium/medium-{0}.in".format(i), 60*5)
+def write_files(size, r1, r2, time_limit, room_start, room_end):
+    for i in range(r1, r2 + 1):
+        D = optimal_solver(room_start,room_end, "~/170proj/phase2/inputs/{0}/{0}-{1}.in".format(size, i), time_limit)
         output_dict = convert_dictionary(D)
-        write_output_file(output_dict, "~/170proj/phase2/outputs/medium/medium-{0}.out".format(i))
-
+        write_output_file(output_dict, "~/170proj/phase2/outputs/{0}/{0}-{1}.out".format(size, i))
 
 
