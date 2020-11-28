@@ -169,7 +169,7 @@ def gurobi_solver(path, rooms, time_limit):
     # Outputs 
         total_happiness = np.sum(np.multiply(pair_values, happiness))
         total_sadness = np.sum(np.multiply(pair_values, sadness))
-
+        print(output_dict)
         return total_happiness, output_dict 
     except:
         return 0, {}
@@ -193,5 +193,7 @@ def write_files(size, r1, r2, time_limit, room_start, room_end):
         D = optimal_solver(room_start,room_end, "/home/ec2-user/170proj/phase2/inputs/{0}/{0}-{1}.in".format(size, i), time_limit)
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "/home/ec2-user/170proj/phase2/outputs/{0}/{0}-{1}.out".format(size, i))
+
+
 
 
