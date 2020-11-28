@@ -184,6 +184,7 @@ def optimal_solver(K_1, K_2, path, time_limit):
         if happiness > max_total_happiness:
             max_total_happiness = happiness
             output_dict = D
+    print(output_dict)
     return output_dict
 
 
