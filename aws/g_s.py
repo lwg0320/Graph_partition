@@ -178,23 +178,29 @@ def gurobi_solver(path, rooms, time_limit):
 
 
 
-def optimal_solver(K_1, K_2, path, time_limit):
+def optimal_solver(room_start, room_end, path, higher_time_limit, lower_time_limit):
     max_total_happiness = 0
     output_dict = {}
-    for room in range(K_1, K_2):
-        happiness, D = gurobi_solver(path, room, time_limit)
-        if happiness > max_total_happiness:
-            max_total_happiness = happiness
-            output_dict = D
+    for room in range(room_start, room_end):
+        if max_total_happiness == 0:
+            happiness, D = gurobi_solver(path, room, higher_time_limit)
+            if happiness > max_total_happiness:
+                max_total_happiness = happiness
+                output_dict = D
+        else: 
+            happiness, D = gurobi_solver(path, room, lower_time_limit)
+            if happiness > max_total_happiness:
+                max_total_happiness = happiness
+                output_dict = D
+
     return output_dict
 
 
-def write_files(size, r1, r2, time_limit, room_start, room_end):
-    for i in range(r1, r2 + 1):
-        D = optimal_solver(room_start,room_end, "/home/ec2-user/170proj/phase2/inputs/{0}/{0}-{1}.in".format(size, i), time_limit)
+def write_files(size, input_start, input_end, higher_time_limit, lower_time_limit, room_start, room_end):
+    for i in range(input_start, input_end + 1):
+        D = optimal_solver(room_start, room_end, "/home/ec2-user/170proj/phase2/outputs/{0}/{0}-{1}.out".format(size, i), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "/home/ec2-user/170proj/phase2/outputs/{0}/{0}-{1}.out".format(size, i))
-
 
 
 
