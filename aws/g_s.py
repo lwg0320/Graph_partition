@@ -198,7 +198,7 @@ def optimal_solver(room_start, room_end, path, higher_time_limit, lower_time_lim
 
 def write_files(size, input_start, input_end, higher_time_limit, lower_time_limit, room_start, room_end):
     for i in range(input_start, input_end + 1):
-        D = optimal_solver(room_start, room_end, "/home/ec2-user/170proj/phase2/inputs/{0}/{0}-{1}.out".format(size, i), higher_time_limit, lower_time_limit)
+        D = optimal_solver(room_start, room_end, "/home/ec2-user/170proj/phase2/inputs/{0}/{0}-{1}.in".format(size, i), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "/home/ec2-user/170proj/phase2/outputs/{0}/{0}-{1}.out".format(size, i))
 
