@@ -169,9 +169,11 @@ def gurobi_solver(path, rooms, time_limit):
     # Outputs 
         total_happiness = np.sum(np.multiply(pair_values, happiness))
         total_sadness = np.sum(np.multiply(pair_values, sadness))
+        print("Total Happiness =", total_happiness)
         print(output_dict)
         return total_happiness, output_dict 
     except:
+        print("No/Infeasible Solution with {0} rooms".format(rooms))
         return 0, {}
 
 
@@ -184,7 +186,6 @@ def optimal_solver(K_1, K_2, path, time_limit):
         if happiness > max_total_happiness:
             max_total_happiness = happiness
             output_dict = D
-    print(output_dict)
     return output_dict
 
 
