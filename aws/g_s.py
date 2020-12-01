@@ -202,5 +202,3 @@ def write_files(size, input_start, input_end, higher_time_limit, lower_time_limi
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "/home/ec2-user/170proj/phase2/outputs/{0}/{0}-{1}.out".format(size, i))
 
-
-
