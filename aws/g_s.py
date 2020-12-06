@@ -1,4 +1,4 @@
-# # Modular Gurobi Solver 
+## Modular Gurobi Solver 
 
 import numpy as np 
 import pandas as pd
@@ -201,4 +201,28 @@ def write_files(size, input_start, input_end, higher_time_limit, lower_time_limi
         D = optimal_solver(room_start, room_end, "/home/ec2-user/170proj/phase2/inputs/{0}/{0}-{1}.in".format(size, i), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "/home/ec2-user/170proj/phase2/outputs/{0}/{0}-{1}.out".format(size, i))
+
+
+
+
+##########################
+inputs = open('invalids.txt', 'r').readlines()
+
+
+
+
+
+def run(size, index_start, index_end, higher_time_limit, lower_time_limit, room_start, room_end):
+    for i in range(index_start, index_end + 1):
+        D = optimal_solver(room_start, room_end, "/home/ec2-user/170proj/inputs_new/{0}.in".format(inputs[i][:-1]), higher_time_limit, lower_time_limit)
+        output_dict = convert_dictionary(D)
+        write_output_file(output_dict, "/home/ec2-user/170proj/outputs_new/{0}.out".format(inputs[i][:-1]))
+
+
+
+
+
+
+
+
 
