@@ -120,7 +120,7 @@ def gurobi_solver(path, rooms, time_limit):
     dict_e = {}
     for k in range(K):
         for i in range(comb(N, 2)):
-            dict_e["e_{0}_{1}_{2}".format(i_id[i],j_id[i],k)] = m.addVar(name= "e_{0}_{1}_{2}".format(i_id[i],j_id[i],k), vtype = GRB.BINARY)
+            dict_e["e_{0}_{1}_{2}".format(i_id[i],j_id[i],k)] = m.addVar(name = "e_{0}_{1}_{2}".format(i_id[i],j_id[i],k), vtype = GRB.BINARY)
 
     dict_v = {}
     for j in range(K):
@@ -199,13 +199,11 @@ def write_files(size, input_start, input_end, higher_time_limit, lower_time_limi
     for i in range(input_start, input_end + 1):
         D = optimal_solver(room_start, room_end, "phase2/inputs/{0}/{0}-{1}.in".format(size, i), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
-        write_output_file(output_dict, "phase2/outputs/{0}/{0}-{1}.out".format(size, i))
+        write_output_file(output_dict, "{0}-{1}.out".format(size, i))
 
 ##########################################################################################################################################
 ##########################################################################################################################################
 ##########################################################################################################################################
-
-
 
 
 
