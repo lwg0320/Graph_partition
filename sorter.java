@@ -42,17 +42,14 @@ public class sorter {
                 num = 45;
                 String[] pp = createPP(num, "small", data);
                 make(data, "small", pp, num);
-                break;
             } else if (data.indexOf('m') == 0) {
                 num = 190;
                 String[] pp = createPP(num, "medium", data);
                 make(data, "medium", pp, num);
-                break;
             } else {
                 num = 1225;
                 String[] pp = createPP(num, "large", data);
                 make(data, "large", pp, num);
-                break;
             }
         }
 
