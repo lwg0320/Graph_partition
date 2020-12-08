@@ -43,25 +43,65 @@
 {\let\newpage\relax\maketitle} 
 \maketitle
 
+
+\section{QP}
 \begin{algorithm}[H]
 
 \SetAlgoLined
-\KwIn{$(i,j)$, \ $h_{i,j}$, \  $s_{i,j}$ \ $\forall i, j$,  \ $S_{max}$}
-\KwOut{Dictionary of room : array of ids' in the room}
- initialization\;
- \While{While condition}{
-  instructions\;
-  \eIf{condition}{
-   instructions1\;
-   instructions2\;
-   }{
-   instructions3\;
-  }
- }
- \caption{Graph Partitioning with Expectation maximization}
+\KwIn{$i,j$, \ $h_{i,j}$, \  $s_{i,j}$ \ $\forall i, j$,  \ , R, $S_{max}$}
+ \vspace*{.1cm}
+\KwOut{\{room$_r$: [people $\in$ room$_r$]\}}
+ \vspace*{.1cm}
+ \textbf{Initialization}: \\
+ $e_{{i,j}_k} \leftarrow \forall i,j \And k = \{1, \dots K\} $\\
+ $v_{i_{k}} \leftarrow \forall i \And k = \{1, \dots K\}$\\ 
+  \vspace*{.1cm}
+ \textbf{Objective}: \\
+ max$\{e_{{i,j}_{k}} * h_{i,j}\}, \ \ \forall i,j \And k = \{1, \dots K\}$
+
+  \vspace*{.1cm}
+ \textbf{Constraints}:
+
+ \vspace*{.1cm}
+$\sum_{k = 1}^{K} e_{{i,j}_{k}} = 1, \ \  \forall i,j $ \\
+$\sum_{(i,j)} e_{{i,j}_{k}} \leq \frac{S_{max}}{K}, \ \ k = \{1, \dots K\}$\\
+$e_{{i,j}_{k}} = v_{i}v_{j}, \ \ \forall i,j \And k = \{1, \dots K\}$
+ \caption{Quadratic program for Graph Partitioning with Dynamic Constraints}
 \end{algorithm}
 
  
+
+\section{LP}
+\begin{algorithm}[H]
+
+\SetAlgoLined
+\KwIn{$i,j$, \ $h_{i,j}$, \  $s_{i,j}$ \ $\forall i, j$,  \ , K, $S_{max}$}
+ \vspace*{.1cm}
+\KwOut{\{room$_r$: [people $\in$ room$_r$]\}}
+ \vspace*{.1cm}
+ \textbf{Initialization}: \\
+ $e_{{i,j}_k} \leftarrow \forall i,j \And k = \{1, \dots K\} $\\
+ $v_{i_{k}} \leftarrow \forall i \And k = \{1, \dots K\}$\\ 
+  \vspace*{.1cm}
+ \textbf{Objective}: \\
+ max$\{e_{{i,j}_{k}} * h_{i,j}\}, \ \ \forall i,j \And k = \{1, \dots K\}$
+
+  \vspace*{.1cm}
+ \textbf{Constraints}:
+
+ \vspace*{.1cm}
+$\sum_{k = 1}^{K} e_{{i,j}_{k}} = 1, \ \  \forall i,j $ \\
+$\sum_{(i,j)} e_{{i,j}_{k}} \leq \frac{S_{max}}{K}, \ \ k = \{1, \dots K\}$\\
+$e_{{i,j}_{k}} \leq v_{i_{k}} \ \ \forall i \And k = \{1, \dots K\}$ \\ 
+$e_{{i,j}_{k}} \leq v_{j_{k}} \ \ \forall i \And k = \{1, \dots K\}$\\
+$e_{{i,j}_{k}} \geq v_{i_{k}} +  v_{j_{k}} -1 \ \ \forall i,j \And k = \{1, \dots K\}$
+ \caption{Linear program for Graph Partitioning with Dynamic Constraints}
+\end{algorithm}
+
+
+
+
+
 
 
 
