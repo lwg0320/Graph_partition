@@ -109,7 +109,7 @@ def gurobi_solver(path, rooms, time_limit):
     # Parsing input data 
     inputs = pd.read_csv(path, header = None)
     N = int(list(inputs[0])[0])
-    s_max = float(list(inputs[0])[1])
+    s_max = int(float(list(inputs[0])[1]))
     K = rooms
     i_id, j_id, sadness, happiness, sadness_1, happiness_1 = parse_inputs(inputs, K)
 
@@ -160,11 +160,12 @@ def gurobi_solver(path, rooms, time_limit):
         people_values = [v.X for v in people]
         people_values = np.array_split(people_values, K)
         pair_values = [v.X for v in pairs]
+        print(pair_values)
         output_dict = {}
         for k in range(K):
             arr = []
             for i in range(N):
-                if people_values[k][i] == 1: 
+                if people_values[k][i] != 0: 
                     arr += [i]
                     output_dict[k] = arr
                             
@@ -212,41 +213,11 @@ def write_files(size, input_start, input_end, higher_time_limit, lower_time_limi
 inputs = open('invalids.txt', 'r').readlines()
 
 
-def run(size, index_start, index_end, higher_time_limit, lower_time_limit, room_start, room_end):
+def runner(size, index_start, index_end, higher_time_limit, lower_time_limit, room_start, room_end):
     for i in range(index_start, index_end + 1):
-        D = optimal_solver(room_start, room_end, "/home/ec2-user/170proj/inputs_new/{0}.in".format(inputs[i][:-1]), higher_time_limit, lower_time_limit)
+        D = optimal_solver(room_start, room_end, "inputs_new/{0}.in".format(inputs[i][:-1]), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
-        write_output_file(output_dict, "/home/ec2-user/170proj/outputs_new/{0}.out".format(inputs[i][:-1]))
-
-
-
-
-def ru(higher_time_limit, lower_time_limit, room_start, room_end):
-    D = optimal_solver(room_start, room_end, "small-148.in" ,higher_time_limit, lower_time_limit)
-    output_dict = convert_dictionary(D)
-    write_output_file(output_dict, "small-148.out")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        write_output_file(output_dict, "outputs_new/{0}.out".format(inputs[i][:-1]))
 
 
 
