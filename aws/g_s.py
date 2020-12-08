@@ -8,6 +8,8 @@ from math import *
 import gurobipy as gp
 from gurobipy import GRB
 
+# import networkx as nx
+
 
 # ## Solver
 
@@ -206,10 +208,8 @@ def write_files(size, input_start, input_end, higher_time_limit, lower_time_limi
 
 
 ##########################
+
 inputs = open('invalids.txt', 'r').readlines()
-
-
-
 
 
 def run(size, index_start, index_end, higher_time_limit, lower_time_limit, room_start, room_end):
@@ -217,6 +217,61 @@ def run(size, index_start, index_end, higher_time_limit, lower_time_limit, room_
         D = optimal_solver(room_start, room_end, "/home/ec2-user/170proj/inputs_new/{0}.in".format(inputs[i][:-1]), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "/home/ec2-user/170proj/outputs_new/{0}.out".format(inputs[i][:-1]))
+
+
+
+
+def ru(higher_time_limit, lower_time_limit, room_start, room_end):
+    D = optimal_solver(room_start, room_end, "small-148.in" ,higher_time_limit, lower_time_limit)
+    output_dict = convert_dictionary(D)
+    write_output_file(output_dict, "small-148.out")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
