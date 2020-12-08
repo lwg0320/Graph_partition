@@ -169,11 +169,11 @@ def gurobi_solver(path, rooms, time_limit):
     # Outputs 
         total_happiness = np.sum(np.multiply(pair_values, happiness))
         total_sadness = np.sum(np.multiply(pair_values, sadness))
-        # print(total_happiness)
-        # print(output_dict)
+        print(total_happiness)
+        print(output_dict)
         return total_happiness, output_dict 
     except:
-        # print("No/Infeasible Solution with {0} rooms".format(rooms))
+        print("No/Infeasible Solution with {0} rooms".format(rooms))
         return 0, {}
 
 
@@ -204,6 +204,19 @@ def write_files(size, input_start, input_end, higher_time_limit, lower_time_limi
 ##########################################################################################################################################
 ##########################################################################################################################################
 ##########################################################################################################################################
+
+
+def runner(size, input_start, input_end, higher_time_limit, lower_time_limit, room_start, room_end):
+    for i in range(input_start, input_end + 1):
+        D = optimal_solver(room_start, room_end, "inputs_sub/{0}-{1}.in".format(size, i), higher_time_limit, lower_time_limit)
+        output_dict = convert_dictionary(D)
+        write_output_file(output_dict, "{0}-{1}.out".format(size, i))
+
+
+
+# runner("large", 101, 101, 60, 10, 1, 30)
+
+
 
 
 
