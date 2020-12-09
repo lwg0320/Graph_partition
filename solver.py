@@ -1,5 +1,4 @@
-# # Modular Gurobi Solver 
-
+ 
 import numpy as np 
 import pandas as pd
 from parse import *
@@ -9,10 +8,12 @@ import gurobipy as gp
 from gurobipy import GRB
 
 
-# ## Solver
-
 
 def parse_inputs(inputs, K):
+    '''
+    Parse input file to extract the happiness and sadness per pair 
+    '''
+
     df = inputs
     df = pd.DataFrame([x.split() for x in df[0].tolist() ])
     df = df.loc[2:,:]
@@ -33,10 +34,12 @@ def parse_inputs(inputs, K):
     return i_id, j_id, sadness, happiness, sadness_1, happiness_1 
 
 
-# In[3]:
 
 
 def create_variables(N, K, dict_e, dict_v):
+    """
+    Create variables required to define objective function and constraints.
+    """
     # edges 
     edges_1 = list(dict_e.values())
 
@@ -50,8 +53,7 @@ def create_variables(N, K, dict_e, dict_v):
     # vertices 
     vertices_1 = list(dict_v.values())
 
-    # Create another edge array with different sort
-#     vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys(), key=lambda x: x[2])]
+
     vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys())]
     
     # Quadratic variables 1 
@@ -78,7 +80,6 @@ def create_variables(N, K, dict_e, dict_v):
     return edges_1, edges_2, edges_3, vertices_1, vertices_2, v_big, v_big_2
 
 
-# In[4]:
 
 
 def constraint_helper(edges_1, sadness_1, vertices_2, N, K):
@@ -93,7 +94,6 @@ def constraint_helper(edges_1, sadness_1, vertices_2, N, K):
     return constraint_1, constraint_2
 
 
-# In[43]:
 
 
 def gurobi_solver(path, rooms, time_limit):
@@ -130,16 +130,18 @@ def gurobi_solver(path, rooms, time_limit):
 
     edges_1, edges_2, edges_3, vertices_1, vertices_2, v_big, v_big_2 = create_variables(N, K, dict_e, dict_v)
 
-    # Set Object function 
+    # Set Objective function 
     m.setObjective(sum(edges_1[i] * happiness[i] for i in range(len(happiness))), GRB.MAXIMIZE)
 
     # Helper method to create constraints 
     constraint_1, constraint_2 = constraint_helper(edges_1, sadness_1, vertices_2, N, K)
 
-    # Add constraints 
+    # Add constraints
+     
     # Constraint 1 
     for i in range(len(constraint_1)):
-        m.addConstr(constraint_1[i] <=  s_max / K) # Changes from float division 
+        m.addConstr(constraint_1[i] <=  s_max / K) 
+
     # Constraint 3
     for i in range(len(constraint_2)):
         m.addConstr(constraint_2[i] == 1)
@@ -178,7 +180,7 @@ def gurobi_solver(path, rooms, time_limit):
 
 
 
-def optimal_solver(room_start, room_end, path, higher_time_limit, lower_time_limit):
+def multiple_solver(room_start, room_end, path, higher_time_limit, lower_time_limit):
     max_total_happiness = 0
     output_dict = {}
     for room in range(room_start, room_end):
@@ -197,18 +199,11 @@ def optimal_solver(room_start, room_end, path, higher_time_limit, lower_time_lim
 
 def write_files(size, input_start, input_end, higher_time_limit, lower_time_limit, room_start, room_end):
     for i in range(input_start, input_end + 1):
-        D = optimal_solver(room_start, room_end, "phase2/inputs/{0}/{0}-{1}.in".format(size, i), higher_time_limit, lower_time_limit)
+        D = multiple_solver(room_start, room_end, "phase2/inputs/{0}/{0}-{1}.in".format(size, i), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
         write_output_file(output_dict, "{0}-{1}.out".format(size, i))
 
-##########################################################################################################################################
-##########################################################################################################################################
-##########################################################################################################################################
 
 
-
-
-
-
-
-
+# if __name__ == "__main__":
+    # write_files("small", 0,0, 60,30, 1,10)
