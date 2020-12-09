@@ -44,7 +44,7 @@
 \maketitle
 
 
-\section{QP}
+\section{QIP}
 \begin{algorithm}[H]
 
 \SetAlgoLined
@@ -55,23 +55,36 @@
  \textbf{Initialization}: \\
  $e_{{i,j}_k} \leftarrow \{0,1\}, \ \  \forall i,j \And k = \{1, \dots K\} $\\
  $v_{i_{k}} \leftarrow \{0,1\}, \ \ \forall i \And k = \{1, \dots K\}$\\ 
+ placements $\leftarrow \left[ \right]$ \\
+ output $\leftarrow \{\}$\\
   \vspace*{.1cm}
  \textbf{Objective}: \\
  max$\{e_{{i,j}_{k}} * h_{i,j}\}, \ \ \forall i,j \And k = \{1, \dots K\}$
-
   \vspace*{.1cm}
- \textbf{Constraints}:
 
+ \textbf{Constraints}: 
  \vspace*{.1cm}
+
 $\sum_{k = 1}^{K} e_{{i,j}_{k}} = 1, \ \  \forall i,j $ \\
 $\sum_{(i,j)} e_{{i,j}_{k}} \leq \frac{S_{max}}{K}, \ \ k = \{1, \dots K\}$\\
-$e_{{i,j}_{k}} = v_{i}v_{j}, \ \ \forall i,j \And k = \{1, \dots K\}$
- \caption{Quadratic program for Graph Partitioning with Dynamic Constraints}
+$e_{{i,j}_{k}} = v_{i}v_{j}, \ \ \forall i,j \And k = \{1, \dots K\}$\\
+placements $\leftarrow \textit{split}(v_{i}'s, k), \ \ k = \{1, \dots K\}$\\
+\For{k in range(K)}{temp $= []$\;
+\For{i in range(N)}{\If{\text{placement}[i][k] \textgreater 0}{temp = [i]\; 
+output[k] = temp\;
+\KwRet{output}
+}}}
+
+
+
+
+
+ \caption{Quadratic Integer program for Graph Partitioning with Dynamic Constraints}
 \end{algorithm}
 
  
 
-\section{LP}
+\section{ILP}
 \begin{algorithm}[H]
 
 \SetAlgoLined
@@ -82,6 +95,8 @@ $e_{{i,j}_{k}} = v_{i}v_{j}, \ \ \forall i,j \And k = \{1, \dots K\}$
  \textbf{Initialization}: \\
  $e_{{i,j}_k} \leftarrow \{0,1\}, \ \  \forall i,j \And k = \{1, \dots K\} $\\
  $v_{i_{k}} \leftarrow \{0,1\}, \ \ \forall i \And k = \{1, \dots K\}$\\ 
+ placements $\leftarrow \left[ \right]$ \\
+ output $\leftarrow \{\}$\\
   \vspace*{.1cm}
  \textbf{Objective}: \\
  max$\{e_{{i,j}_{k}} * h_{i,j}\}, \ \ \forall i,j \And k = \{1, \dots K\}$
@@ -94,8 +109,14 @@ $\sum_{k = 1}^{K} e_{{i,j}_{k}} = 1, \ \  \forall i,j $ \\
 $\sum_{(i,j)} e_{{i,j}_{k}} \leq \frac{S_{max}}{K}, \ \ k = \{1, \dots K\}$\\
 $e_{{i,j}_{k}} \leq v_{i_{k}} \ \ \forall i \And k = \{1, \dots K\}$ \\ 
 $e_{{i,j}_{k}} \leq v_{j_{k}} \ \ \forall i \And k = \{1, \dots K\}$\\
-$e_{{i,j}_{k}} \geq v_{i_{k}} +  v_{j_{k}} -1 \ \ \forall i,j \And k = \{1, \dots K\}$
- \caption{Linear program for Graph Partitioning with Dynamic Constraints}
+$e_{{i,j}_{k}} \geq v_{i_{k}} +  v_{j_{k}} -1 \ \ \forall i,j \And k = \{1, \dots K\}$\\
+placements $\leftarrow \textit{split}(v_{i}'s, k), \ \ k = \{1, \dots K\}$\\
+\For{k in range(K)}{temp $= []$\;
+\For{i in range(N)}{\If{\text{placement}[i][k] \textgreater 0}{temp = [i]\; 
+output[k] = temp\;
+\KwRet{output}
+}}}
+ \caption{Integer Linear program for Graph Partitioning with Dynamic Constraints}
 \end{algorithm}
 
 
