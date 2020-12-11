@@ -13,7 +13,6 @@ def parse_inputs(inputs, K):
     '''
     Parse input file to extract the happiness and sadness per pair 
     '''
-
     df = inputs
     df = pd.DataFrame([x.split() for x in df[0].tolist() ])
     df = df.loc[2:,:]
@@ -40,24 +39,12 @@ def create_variables(N, K, dict_e, dict_v):
     """
     Create variables required to define objective function and constraints.
     """
-    # edges 
-    edges_1 = list(dict_e.values())
-
-    # Create another edge array with different sort
-    edges_2 = [dict_e.get(i) for i in sorted(dict_e.keys(), key=lambda x: (x[2], x[4]))]
-
-    # Create another edge array for constraint 4 
-    edges_3 = [dict_e.get(i) for i in sorted(dict_e.keys(), key=lambda x: (x[2], x[6]))]
-
-
-    # vertices 
-    vertices_1 = list(dict_v.values())
-
-
-    vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys())]
-    
-    # Quadratic variables 1 
-    v_list = np.array(np.array_split(vertices_1, K)).tolist()
+    edges_1 = list(dict_e.values()) # edges 
+    edges_2 = [dict_e.get(i) for i in sorted(dict_e.keys(), key=lambda x: (x[2], x[4]))] # Create an edge array with different sort 
+    edges_3 = [dict_e.get(i) for i in sorted(dict_e.keys(), key=lambda x: (x[2], x[6]))] # Create another edge array for constraint 3 
+    vertices_1 = list(dict_v.values()) # vertices
+    vertices_2 = [dict_v.get(i) for i in sorted(dict_v.keys())] # sorted vertices
+    v_list = np.array(np.array_split(vertices_1, K)).tolist() # Quadratic variables 1 
     v_big = []
     for i in range(K):
         j = 0
@@ -65,9 +52,7 @@ def create_variables(N, K, dict_e, dict_v):
             for _ in range(j,N-1):
                 v_big.append(v_list[i][j])
             j += 1
-
-    # Quadratic variables 2
-    v_list_2 = [i[1:] for i in v_list]
+    v_list_2 = [i[1:] for i in v_list] # Quadratic variables 2
     v_big_2 = []
     for h in range(K):
         j = 0
@@ -75,21 +60,20 @@ def create_variables(N, K, dict_e, dict_v):
             for i in range(j,N-1):
                 v_big_2.append(v_list_2[h][i])
             j += 1
-            i = j
-    
+            i = j  
     return edges_1, edges_2, edges_3, vertices_1, vertices_2, v_big, v_big_2
 
 
 
 
 def constraint_helper(edges_1, sadness_1, vertices_2, N, K):
-    aa = []
-    h = 0
+    temp = []
+    counter = 0
     for i in range(K):
         for j in range(comb(N,2)):
-            aa.append(edges_1[h] * sadness_1[j])
-            h += 1
-    constraint_1 = [sum(aa[i:i+ comb(N,2)]) for i in range(0, len(aa), comb(N,2))]
+            temp.append(edges_1[counter] * sadness_1[j])
+            counter += 1
+    constraint_1 = [sum(temp[i:i+ comb(N,2)]) for i in range(0, len(temp), comb(N,2))]
     constraint_2 = [sum(vertices_2[i:i + K]) for i in range(0, len(vertices_2), K)]
     return constraint_1, constraint_2
 
@@ -115,44 +99,34 @@ def gurobi_solver(path, rooms, time_limit):
     m = gp.Model("proj")
     m.setParam('OutputFlag', 0)
     m.setParam("TuneOutput", 0)
-
     # Create arrays to help with methods 
     dict_e = {}
     for k in range(K):
         for i in range(comb(N, 2)):
             dict_e["e_{0}_{1}_{2}".format(i_id[i],j_id[i],k)] = m.addVar(name = "e_{0}_{1}_{2}".format(i_id[i],j_id[i],k), vtype = GRB.BINARY)
-
     dict_v = {}
     for j in range(K):
         for i in range(N):
             dict_v["v_{0}_{1}".format(i,j)] = m.addVar(name = "v_{0}_{1}".format(i,j),  vtype = GRB.BINARY)
-
-
     edges_1, edges_2, edges_3, vertices_1, vertices_2, v_big, v_big_2 = create_variables(N, K, dict_e, dict_v)
-
     # Set Objective function 
     m.setObjective(sum(edges_1[i] * happiness[i] for i in range(len(happiness))), GRB.MAXIMIZE)
-
     # Helper method to create constraints 
     constraint_1, constraint_2 = constraint_helper(edges_1, sadness_1, vertices_2, N, K)
-
-    # Add constraints
-     
+    # Add constraints  
     # Constraint 1 
     for i in range(len(constraint_1)):
         m.addConstr(constraint_1[i] <=  s_max / K) 
 
-    # Constraint 3
+    # Constraint 2
     for i in range(len(constraint_2)):
         m.addConstr(constraint_2[i] == 1)
     # Constraint 3 
     for i in range(len(edges_1)):
         m.addConstr(edges_1[i] == v_big[i] * v_big_2[i])
-
     # Optimize model 
     m.setParam('TimeLimit', time_limit)
     m.optimize()
-
     # Get outputs 
     pairs = m.getVars()[0 : len(m.getVars()) - N*K]
     people = m.getVars()[len(m.getVars()) - N*K : len(m.getVars())]
@@ -166,8 +140,7 @@ def gurobi_solver(path, rooms, time_limit):
             for i in range(N):
                 if people_values[k][i] > 0: 
                     arr += [i]
-                    output_dict[k] = arr
-                            
+                    output_dict[k] = arr                          
     # Outputs 
         total_happiness = np.sum(np.multiply(pair_values, happiness))
         total_sadness = np.sum(np.multiply(pair_values, sadness))
@@ -191,17 +164,17 @@ def multiple_solver(room_start, room_end, path, higher_time_limit, lower_time_li
                 output_dict = D
         else: 
             happiness, D = gurobi_solver(path, room, lower_time_limit)
-            if happiness > max_total_happiness + .01:
+            if happiness > max_total_happiness + .0001:
                 max_total_happiness = happiness
                 output_dict = D
 
     return output_dict
 
 def write_files(size, input_start, input_end, higher_time_limit, lower_time_limit, room_start, room_end):
-    for i in range(input_start, input_end + 1):
-        D = multiple_solver(room_start, room_end, "phase2/inputs/{0}/{0}-{1}.in".format(size, i), higher_time_limit, lower_time_limit)
+    for num in range(input_start, input_end + 1):
+        D = multiple_solver(room_start, room_end, "phase2/inputs/{0}/{0}-{1}.in".format(size, num), higher_time_limit, lower_time_limit)
         output_dict = convert_dictionary(D)
-        write_output_file(output_dict, "{0}-{1}.out".format(size, i))
+        write_output_file(output_dict, "{0}-{1}.out".format(size, num))
 
 
 
