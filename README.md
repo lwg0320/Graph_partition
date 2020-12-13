@@ -23,3 +23,8 @@ Your job is to place n students into Zoom breakout rooms. For each pair of stude
 • H_{total} = Total happiness across all breakout rooms 
 
 • k = Total number of breakout rooms opened 
+
+
+### Files 
+• algorithm.pdf: pseudocode for QILP and ILP algorithms
+• solver.py: Main solver used to generate outputs 
