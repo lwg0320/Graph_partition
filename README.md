@@ -28,4 +28,6 @@ Your job is to place n students into Zoom breakout rooms. For each pair of stude
 ### Files 
 • algorithm.pdf: pseudocode for QILP and ILP algorithms
 
-• solver.py: Main solver used to generate outputs (REQUIRES GUROBI LICENSE)
+• qilp_solver.py: QILP solver used to generate outputs (REQUIRES GUROBI LICENSE)
+
+• ilp_solver.py: ILP solver (SLOWER)
